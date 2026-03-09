@@ -1,0 +1,25 @@
+name = "appconnect-bark-worker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+# Bark 服务器地址，默认为官方服务器
+BARK_SERVER = "https://api.day.app"
+# 通知默认标题
+DEFAULT_TITLE = "App Store 通知"
+
+# 注意：BARK_KEY 请通过 wrangler secret put BARK_KEY 设置
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
