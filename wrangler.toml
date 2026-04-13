@@ -1,4 +1,4 @@
-name = "appstoreconnect-bark-worker"
+name = "appstoreconnect-notify-bark"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
