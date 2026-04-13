@@ -144,16 +144,41 @@ function getNotificationInfo(type: string, subtype: string): { title: string; ic
   return { title, icon };
 }
 
+/**
+ * 获取商品 ID 的映射名称
+ */
 function getProductInfo(productId: string): string {
   const products: Record<string, string> = {
+    "com.atomflip.cashcode.premium.specialoffer": "特惠会员",
+    "com.atomflip.cashcode.premium.permanent": "永久会员",
+    "com.atomflip.cashcode.gift": "邀请有礼1",
+    "com.atomflip.cashcode.gift10": "邀请有礼1",
+    "com.atomflip.cashcode.gift30": "邀请有礼2",
+    "com.atomflip.cashcode.gift60": "邀请有礼3",
+    "com.atomflip.cashcode.gift100": "邀请有礼4",
     "com.atomflip.cashcode.premium.yearly": "年度会员",
-    "com.atomflip.cashcode.premium.permanent": "永久会员"
+    "com.atomflip.cashcode.premium.quarterly": "季度会员",
+    "com.atomflip.cashcode.premium.monthly": "月度会员"
   };
   return products[productId] ? `${products[productId]} (${productId})` : productId;
 }
 
+/**
+ * 获取地区的映射名称 (常用地区)
+ */
 function getStorefrontInfo(storefront: string): string {
-  const stores: Record<string, string> = { "CHN": "中国", "USA": "美国", "HKG": "香港" };
+  const stores: Record<string, string> = {
+    "CHN": "中国",
+    "USA": "美国",
+    "HKG": "香港",
+    "TWN": "台湾",
+    "JPN": "日本",
+    "KOR": "韩国",
+    "GBR": "英国",
+    "DEU": "德国",
+    "FRA": "法国",
+  };
+  // storefront 通常是 3 位地区码 + 后面的一串数字，这里简单做前缀匹配
   const code = storefront.substring(0, 3);
   return stores[code] ? `${stores[code]} (${storefront})` : storefront;
 }
