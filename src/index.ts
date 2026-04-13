@@ -209,6 +209,7 @@ function getNotificationInfo(type: string, subtype: string): { title: string; ic
  */
 function getProductInfo(productId: string): string {
   const products: Record<string, string> = {
+    "com.atomflip.cashcode.premium.specialoffer": "特惠会员",
     "com.atomflip.cashcode.premium.permanent": "永久会员",
     "com.atomflip.cashcode.gift": "邀请有礼1",
     "com.atomflip.cashcode.gift10": "邀请有礼1",
