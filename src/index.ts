@@ -89,19 +89,27 @@ export default {
         return new Response("OK: Skipped non-revenue notification", { status: 200 });
       }
 
-      // 5. 支持多个 BARK_KEY (以逗号分隔)
-      const barkKeys = env.BARK_KEY.split(',').map(key => key.trim()).filter(key => key.length > 0);
 
-      const sendPromises = barkKeys.map(async (key) => {
-        const barkUrl = `${env.BARK_SERVER}/${key}/${encodeURIComponent(env.DEFAULT_TITLE)}/${encodeURIComponent(message)}?group=AppStore&icon=https://raw.githubusercontent.com/AtomFlip/CashcodeResource/main/icon.png`;
-        const response = await fetch(barkUrl);
-        return response.text();
+      // 4. 发送 Bark 通知
+      const barkKeys = env.BARK_KEY.split(',').map(k => k.trim()).filter(Boolean);
+      const barkServer = env.BARK_SERVER.replace(/\/$/, ""); // 去掉末尾斜杠
+
+      const promises = barkKeys.map(async (key) => {
+        // 使用 URLSearchParams 构造参数，避免手动 encodeURIComponent 的风险
+        const params = new URLSearchParams({
+          title: env.DEFAULT_TITLE || "App Store 通知",
+          body: `${displayTitle}\n------------------\n${fullMessage}`,
+          group: "AppStore",
+          icon: "https://raw.githubusercontent.com/AtomFlip/CashcodeResource/main/icon.png",
+          level: "active" // 确保重要通知能亮屏
+        });
+
+        return fetch(`${barkServer}/${key}/?${params.toString()}`);
       });
 
-      const results = await Promise.allSettled(sendPromises);
-      const resultSummary = results.map((r, i) => `${barkKeys[i]}: ${r.status === 'fulfilled' ? 'Success' : 'Failed'}`).join(', ');
+      ctx.waitUntil(Promise.allSettled(promises)); // 在后台完成发送，不阻塞响应
 
-      return new Response(`OK: ${resultSummary}`, { status: 200 });
+      return new Response("Accepted", { status: 202 });
     } catch (error: any) {
       console.error("Error:", error.message, error.stack);
       return new Response(`Error: ${error.message}`, { status: 500 });
